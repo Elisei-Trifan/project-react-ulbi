@@ -15,7 +15,7 @@ export default function App() {
   const [selectedSort, setSelectedSort] = useState('')
   const [search, setSearch] = useState('')
 
-  const sortedPost = useMemo(() => {
+  const sortedPosts = useMemo(() => {
     console.log('есть')
     if (selectedSort) {
       return [...posts].sort((a, b) =>
@@ -25,6 +25,12 @@ export default function App() {
       return posts
     }
   }, [selectedSort, posts])
+
+  const sortedAndSearchadPost = useMemo(() => {
+    return sortedPosts.filter((item) =>
+      item.title.toLowerCase().includes(search.toLowerCase())
+    )
+  }, [search, sortedPosts])
 
   function createPost(newPo) {
     setPosts([...posts, newPo])
@@ -57,12 +63,12 @@ export default function App() {
             { value: 'body', name: 'По описанию' },
           ]}
         />
-        {posts.length === 0 ? (
+        {sortedAndSearchadPost.length === 0 ? (
           <h1 style={{ textAlign: 'center' }}>Посты не найдены</h1>
         ) : (
           <PostList
             remove={removePost}
-            posts={sortedPost}
+            posts={sortedAndSearchadPost}
             title="Список постов про JS"
           />
         )}
