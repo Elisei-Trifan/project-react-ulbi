@@ -35,6 +35,7 @@ export default function App() {
 
   function createPost(newPo) {
     setPosts([...posts, newPo])
+    setModal(false)
   }
 
   function removePost(removePo) {
@@ -43,7 +44,9 @@ export default function App() {
 
   return (
     <div className="App">
-      <MyButton onClick={() => setModal(true)}>Создать пост</MyButton>
+      <MyButton style={{ marginTop: '30px' }} onClick={() => setModal(true)}>
+        Создать пост
+      </MyButton>
       <MyModal visible={modal} setVisible={setModal}>
         <PostForm create={createPost} />
       </MyModal>
