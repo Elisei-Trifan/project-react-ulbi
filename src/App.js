@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import './styles/App.css'
 import PostList from './components/PostList'
 import PostForm from './components/PostForm'
@@ -20,20 +20,22 @@ export default function App() {
   const [limit, setLimit] = useState(10)
   const [page, setPage] = useState(1)
 
-  const [fetchPost, isPostLoading, postError] = useFetching(async () => {
-    const response = await PostService.getAll(limit, page)
-    setPosts(response.data)
-    const totalCount = response.headers['x-total-count']
+  const [fetchPost, isPostLoading, postError] = useFetching(
+    async (limit, page) => {
+      const response = await PostService.getAll(limit, page)
+      setPosts(response.data)
+      const totalCount = response.headers['x-total-count']
 
-    setTotalPage(getPageCount(totalCount, limit))
-  })
+      setTotalPage(getPageCount(totalCount, limit))
+    }
+  )
 
   const sortedAndSearchadPost = usePost(posts, filter.sort, filter.query)
 
   let pagesArray = getPagesArray(totalPage)
 
   useEffect(() => {
-    fetchPost()
+    fetchPost(limit, page)
   }, [])
 
   function createPost(newPo) {
@@ -44,6 +46,14 @@ export default function App() {
   function removePost(removePo) {
     setPosts(posts.filter((item) => item.id !== removePo.id))
   }
+
+  const changePageMemo = useMemo(() => {
+    function changePage(page) {
+      setPage(page)
+      fetchPost(limit, page)
+    }
+    return changePage
+  }, [page])
 
   return (
     <div className="App">
@@ -81,7 +91,7 @@ export default function App() {
       <div className="page_wrapper">
         {pagesArray.map((p) => (
           <span
-            onClick={() => setPage(p)}
+            onClick={() => changePageMemo(p)}
             className={page === p ? 'page page_clicked' : 'page'}
             key={p}
           >
