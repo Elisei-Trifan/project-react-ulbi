@@ -13,12 +13,18 @@ export default function App() {
 
   const [filter, setFilter] = useState({ sort: '', query: '' })
   const [modal, setModal] = useState(false)
+  const [isPostLoading, setIsPostLoading] = useState(false)
+
   const sortedAndSearchadPost = usePost(posts, filter.sort, filter.query)
 
   useEffect(() => {
     async function fetchPost() {
-      const posts = await PostService.getAll()
-      setPosts(posts)
+      setIsPostLoading(true)
+      setTimeout(async () => {
+        const posts = await PostService.getAll()
+        setPosts(posts)
+        setIsPostLoading(false)
+      }, 2000)
     }
     fetchPost()
   }, [])
@@ -45,11 +51,15 @@ export default function App() {
 
       <PostFilter filter={filter} setFilter={setFilter} />
 
-      <PostList
-        remove={removePost}
-        posts={sortedAndSearchadPost}
-        title="Список постов про JS"
-      />
+      {isPostLoading ? (
+        <h1>Loading...</h1>
+      ) : (
+        <PostList
+          remove={removePost}
+          posts={sortedAndSearchadPost}
+          title="Список постов про JS"
+        />
+      )}
     </div>
   )
 }
