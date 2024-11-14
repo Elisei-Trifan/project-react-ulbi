@@ -1,10 +1,11 @@
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import './styles/App.css'
 import PostList from './components/PostList'
 import PostForm from './components/PostForm'
 import PostFilter from './components/PostFilter'
 import MyModal from './components/UI/modal/MyModal'
 import MyButton from './components/UI/button/MyButton'
+import { usePost } from './hooks/usePost'
 
 export default function App() {
   const [posts, setPosts] = useState([
@@ -15,23 +16,7 @@ export default function App() {
 
   const [filter, setFilter] = useState({ sort: '', query: '' })
   const [modal, setModal] = useState(false)
-
-  const sortedPosts = useMemo(() => {
-    console.log('есть')
-    if (filter.sort) {
-      return [...posts].sort((a, b) =>
-        a[filter.sort].localeCompare(b[filter.sort])
-      )
-    } else {
-      return posts
-    }
-  }, [filter.sort, posts])
-
-  const sortedAndSearchadPost = useMemo(() => {
-    return sortedPosts.filter((item) =>
-      item.title.toLowerCase().includes(filter.query.toLowerCase())
-    )
-  }, [filter.query, sortedPosts])
+  const sortedAndSearchadPost = usePost(posts, filter.sort, filter.query)
 
   function createPost(newPo) {
     setPosts([...posts, newPo])
