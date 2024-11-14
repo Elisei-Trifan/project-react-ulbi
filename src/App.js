@@ -6,7 +6,7 @@ import PostFilter from './components/PostFilter'
 import MyModal from './components/UI/modal/MyModal'
 import MyButton from './components/UI/button/MyButton'
 import { usePost } from './hooks/usePost'
-import axios from 'axios'
+import PostService from './API/PostServece'
 
 export default function App() {
   const [posts, setPosts] = useState([])
@@ -17,10 +17,8 @@ export default function App() {
 
   useEffect(() => {
     async function fetchPost() {
-      const response = await axios.get(
-        'https://jsonplaceholder.typicode.com/posts'
-      )
-      setPosts(response.data)
+      const posts = await PostService.getAll()
+      setPosts(posts)
     }
     fetchPost()
   }, [])
