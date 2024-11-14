@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './styles/App.css'
 import PostList from './components/PostList'
 import PostForm from './components/PostForm'
@@ -15,16 +15,19 @@ export default function App() {
   const [modal, setModal] = useState(false)
   const sortedAndSearchadPost = usePost(posts, filter.sort, filter.query)
 
+  useEffect(() => {
+    async function fetchPost() {
+      const response = await axios.get(
+        'https://jsonplaceholder.typicode.com/posts'
+      )
+      setPosts(response.data)
+    }
+    fetchPost()
+  }, [])
+
   function createPost(newPo) {
     setPosts([...posts, newPo])
     setModal(false)
-  }
-
-  async function fetchPost() {
-    const response = await axios.get(
-      'https://jsonplaceholder.typicode.com/posts'
-    )
-    console.log(response.data)
   }
 
   function removePost(removePo) {
@@ -33,7 +36,6 @@ export default function App() {
 
   return (
     <div className="App">
-      <button onClick={fetchPost}>Get post</button>
       <MyButton style={{ marginTop: '30px' }} onClick={() => setModal(true)}>
         Создать пост
       </MyButton>

@@ -1,12 +1,21 @@
 .myBtn {
   padding: 5px 15px;
+  margin-left: 10px;
   color: teal;
   font-size: 14px;
   background: transparent;
   border: 1px solid teal;
   cursor: pointer;
+  border-radius: 5px;
 }
 
 .myBtn:disabled {
   cursor: not-allowed;
+}
+
+.myBtn:hover {
+  transform: scale(1.1);
+  background: #666;
+  color: aliceblue;
+  transition: transform 0.15s ease-in;
 }
