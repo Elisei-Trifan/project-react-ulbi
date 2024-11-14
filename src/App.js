@@ -6,13 +6,10 @@ import PostFilter from './components/PostFilter'
 import MyModal from './components/UI/modal/MyModal'
 import MyButton from './components/UI/button/MyButton'
 import { usePost } from './hooks/usePost'
+import axios from 'axios'
 
 export default function App() {
-  const [posts, setPosts] = useState([
-    { id: 1, title: 'JavaScript ', body: 'JavaScript Decription' },
-    { id: 2, title: 'Node.js', body: 'Node Decription' },
-    { id: 3, title: 'Python', body: 'Python Decription' },
-  ])
+  const [posts, setPosts] = useState([])
 
   const [filter, setFilter] = useState({ sort: '', query: '' })
   const [modal, setModal] = useState(false)
@@ -23,12 +20,20 @@ export default function App() {
     setModal(false)
   }
 
+  async function fetchPost() {
+    const response = await axios.get(
+      'https://jsonplaceholder.typicode.com/posts'
+    )
+    console.log(response.data)
+  }
+
   function removePost(removePo) {
     setPosts(posts.filter((item) => item.id !== removePo.id))
   }
 
   return (
     <div className="App">
+      <button onClick={fetchPost}>Get post</button>
       <MyButton style={{ marginTop: '30px' }} onClick={() => setModal(true)}>
         Создать пост
       </MyButton>
