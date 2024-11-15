@@ -10,6 +10,7 @@ import PostService from './API/PostServece'
 import Loader from './components/UI/loader/Loader'
 import { useFetching } from './hooks/useFetching'
 import { getPageCount, getPagesArray } from './utils/pages'
+import Pagination from './components/UI/pagination/Pagination'
 
 export default function App() {
   const [posts, setPosts] = useState([])
@@ -31,8 +32,6 @@ export default function App() {
   )
 
   const sortedAndSearchadPost = usePost(posts, filter.sort, filter.query)
-
-  let pagesArray = getPagesArray(totalPage)
 
   useEffect(() => {
     fetchPost(limit, page)
@@ -87,18 +86,21 @@ export default function App() {
           title="Список постов про JS"
         />
       )}
-
-      <div className="page_wrapper">
-        {pagesArray.map((p) => (
-          <span
-            onClick={() => changePageMemo(p)}
-            className={page === p ? 'page page_clicked' : 'page'}
-            key={p}
-          >
-            {p}
-          </span>
-        ))}
-      </div>
+      <Pagination
+        page={page}
+        changePageMemo={changePageMemo}
+        totalPage={totalPage}
+      />
     </div>
   )
 }
+
+/* <BrowserRouter>
+      <Navbar />
+
+      <Routes>
+           <Route path="posts" element={<Posts />}/>
+           <Route path="about" element={<About />}/>  
+           <Route path="*" element={<Error />}/>
+      </Routes>
+</BrowserRouter>*/
