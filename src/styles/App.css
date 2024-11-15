@@ -23,6 +23,10 @@
   padding: 5px 15px;
 }
 
+.post_btns {
+  display: flex;
+}
+
 .post-enter {
   transform: translateX(-850px);
 }
