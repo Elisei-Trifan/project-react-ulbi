@@ -12,7 +12,7 @@ export default function App() {
       future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
     >
       <Navbar />
-      <Routes>
+      <Routes path="" element={<Posts />}>
         <Route path="/about" element={<About />}></Route>
         <Route path="/posts" element={<Posts />}></Route>
         <Route path="/posts/:id" element={<PostIdPage />}></Route>
