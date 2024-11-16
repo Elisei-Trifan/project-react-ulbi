@@ -5,6 +5,8 @@ import { AuthContext } from './context'
 
 const AppRouter = () => {
   const { isAuth } = useContext(AuthContext)
+  console.log(isAuth)
+
   return isAuth ? (
     <Routes>
       {privateRoutes.map((item, index) => (
