@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useReducer, useState, useRef } from 'react'
 import PostList from '../components/PostList'
 import PostForm from '../components/PostForm'
 import PostFilter from '../components/PostFilter'
@@ -21,6 +21,9 @@ export default function Posts() {
   const [totalPage, setTotalPage] = useState(0)
   const [limit, setLimit] = useState(10)
   const [page, setPage] = useState(1)
+  const lastElement = useRef()
+  const observer = useRef()
+  console.log(lastElement)
 
   const [fetchPost, isPostLoading, postError] = useFetching(
     async (limit, page) => {
@@ -34,7 +37,15 @@ export default function Posts() {
 
   const sortedAndSearchadPost = usePost(posts, filter.sort, filter.query)
 
-  useEffect(() => {}, [])
+  useEffect(() => {
+    const callback = function (entries, observer) {
+      if (entries[0].isIntersecting) {
+        console.log('див в зоне видимости')
+      }
+    }
+    observer.current = new IntersectionObserver(callback)
+    observer.current.observe(lastElement.current)
+  }, [])
 
   useEffect(() => {
     fetchPost(limit, page)
@@ -76,6 +87,10 @@ export default function Posts() {
         posts={sortedAndSearchadPost}
         title="Список постов про JS"
       />
+      <div
+        ref={lastElement}
+        style={{ height: '20px', background: 'red' }}
+      ></div>
 
       {isPostLoading && (
         <div
