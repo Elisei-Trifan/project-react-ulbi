@@ -12,6 +12,7 @@ import Loader from '../components/UI/loader/Loader'
 import { useFetching } from '../hooks/useFetching'
 import { getPageCount } from '../utils/pages'
 import Pagination from '../components/UI/pagination/Pagination'
+import { useObserver } from '../hooks/useObserver'
 
 export default function Posts() {
   const [posts, setPosts] = useState([])
@@ -22,8 +23,6 @@ export default function Posts() {
   const [limit, setLimit] = useState(10)
   const [page, setPage] = useState(1)
   const lastElement = useRef()
-  const observer = useRef()
-  console.log(lastElement)
 
   const [fetchPost, isPostLoading, postError] = useFetching(
     async (limit, page) => {
@@ -36,6 +35,10 @@ export default function Posts() {
   )
 
   const sortedAndSearchadPost = usePost(posts, filter.sort, filter.query)
+
+  useObserver(lastElement, page < totalPage, isPostLoading, () => {
+    setPage(page + 1)
+  })
 
   useEffect(() => {
     fetchPost(limit, page)
