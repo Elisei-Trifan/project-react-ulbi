@@ -38,19 +38,6 @@ export default function Posts() {
   const sortedAndSearchadPost = usePost(posts, filter.sort, filter.query)
 
   useEffect(() => {
-    if (isPostLoading) return
-    if (observer.current) observer.current.disconnect()
-    const callback = function (entries, observer) {
-      if (entries[0].isIntersecting && page < totalPage) {
-        setPage(page + 1)
-        console.log(page)
-      }
-    }
-    observer.current = new IntersectionObserver(callback)
-    observer.current.observe(lastElement.current)
-  }, [isPostLoading])
-
-  useEffect(() => {
     fetchPost(limit, page)
   }, [page])
 
