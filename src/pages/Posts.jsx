@@ -25,7 +25,7 @@ export default function Posts() {
   const [fetchPost, isPostLoading, postError] = useFetching(
     async (limit, page) => {
       const response = await PostService.getAll(limit, page)
-      setPosts(response.data)
+      setPosts([...posts, ...response.data])
       const totalCount = response.headers['x-total-count']
 
       setTotalPage(getPageCount(totalCount, limit))
@@ -34,9 +34,11 @@ export default function Posts() {
 
   const sortedAndSearchadPost = usePost(posts, filter.sort, filter.query)
 
+  useEffect(() => {}, [])
+
   useEffect(() => {
     fetchPost(limit, page)
-  }, [])
+  }, [page])
 
   function createPost(newPo) {
     setPosts([...posts, newPo])
@@ -50,7 +52,6 @@ export default function Posts() {
   const changePageMemo = useMemo(() => {
     function changePage(page) {
       setPage(page)
-      fetchPost(limit, page)
     }
     return changePage
   }, [page])
@@ -70,7 +71,13 @@ export default function Posts() {
 
       {postError && <h1>Произошла ошибка {postError} </h1>}
 
-      {isPostLoading ? (
+      <PostList
+        remove={removePost}
+        posts={sortedAndSearchadPost}
+        title="Список постов про JS"
+      />
+
+      {isPostLoading && (
         <div
           style={{
             display: 'flex',
@@ -80,13 +87,8 @@ export default function Posts() {
         >
           <Loader />
         </div>
-      ) : (
-        <PostList
-          remove={removePost}
-          posts={sortedAndSearchadPost}
-          title="Список постов про JS"
-        />
       )}
+
       <Pagination
         page={page}
         changePageMemo={changePageMemo}
